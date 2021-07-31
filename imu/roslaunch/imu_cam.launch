@@ -1,0 +1,8 @@
+<launch>
+  <!-- get head msg from joint states-->
+    <node pkg="sensor" type="imu.py" name="" />
+  <!-- get left arm msg from joint states-->
+    <node pkg="sensor" type="cam.py" name="" />
+
+</launch>
+

@@ -1,0 +1,3 @@
+<launch>
+    <node name="rviz" pkg="rviz" type="rviz" output="log" args="-d /home/rich/SLAM/amono_loop/catkin_ws/src/msckf_vio_loop-master/msckf_vio/rviz/rviz_euroc_config.rviz" />
+</launch>
