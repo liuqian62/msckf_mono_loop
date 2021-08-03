@@ -4,7 +4,7 @@
  * Copyright (C) 2017 The Trustees of the University of Pennsylvania
  * All rights reserved.
  */
-
+#pragma once
 #ifndef POSE_GRAPH_NODELET_H
 #define POSE_GRAPH_NODELET_H
 

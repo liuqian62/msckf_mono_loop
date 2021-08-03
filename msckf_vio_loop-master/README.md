@@ -1,6 +1,6 @@
 # msckf_vio_loop
 This is msckf_vio with loop detection and global pose graph optimization
-
+How to run:
 How to run:
 1、catkin_make --pkg msckf_vio --cmake-args -DCMAKE_BUILD_TYPE=Release
 2、roslaunch msckf_vio msckf_vio_euroc.launch

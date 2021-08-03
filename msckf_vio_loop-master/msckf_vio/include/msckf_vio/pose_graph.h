@@ -4,7 +4,7 @@
  * Copyright (C) 2017 The Trustees of the University of Pennsylvania
  * All rights reserved.
  */
-
+#pragma once
 #ifndef MSCKF_VIO_POSE_GRAPH_H
 #define MSCKF_VIO_POSE_GRAPH_H
 

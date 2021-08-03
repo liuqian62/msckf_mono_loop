@@ -133,7 +133,9 @@ void PoseGraph::addKeyFrame(KeyFrame* cur_kf, bool flag_detect_loop)
         //printf(" %d detect loop with %d \n", cur_kf->index, loop_index);
         KeyFrame* old_kf = getKeyFrame(loop_index);
 
-        if (cur_kf->findConnection(old_kf))
+        if (cur_kf->findConnection_my(old_kf))
+	{}
+	if (0)
         {
             if (earliest_loop_index > loop_index || earliest_loop_index == -1)
                 earliest_loop_index = loop_index;
@@ -392,11 +394,14 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
         }
     }
     // a good match with its nerghbour
-    if (ret.size() >= 1 &&ret[0].Score > 0.05)
+	ROS_INFO("score%f",ret[0].Score);
+    //if (ret.size() >= 1 &&ret[0].Score > 0.05)
+	if (ret.size() >= 1 &&ret[0].Score > 0.025)
         for (unsigned int i = 1; i < ret.size(); i++)
         {
             //if (ret[i].Score > ret[0].Score * 0.3)
-            if (ret[i].Score > 0.015)
+            //if (ret[i].Score > 0.015)
+	if (ret[i].Score > 0.075)
             {          
                 find_loop = true;
                 int tmp_index = ret[i].Id;

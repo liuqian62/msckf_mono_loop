@@ -2,8 +2,9 @@
 
 #include <vector>
 #include <eigen3/Eigen/Dense>
-#include <opencv2/opencv.hpp>
+
 #include <opencv2/core/eigen.hpp>
+#include <opencv2/opencv.hpp>
 //#include "camodocal/camera_models/CameraFactory.h"
 //#include "camodocal/camera_models/CataCamera.h"
 //#include "camodocal/camera_models/PinholeCamera.h"
@@ -12,8 +13,16 @@
 #include "msckf_vio/parameters.h"
 #include "msckf_vio/DBoW2.h"
 #include "msckf_vio/DVision.h"
+#include "gms_matcher.h"
 
 #define MIN_LOOP_NUM 4
+#include <opencv2/core/core.hpp>
+#include <opencv2/features2d/features2d.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+// #include "extra.h" // use this if in OpenCV2 
+//using namespace std;
+using namespace cv;
 namespace msckf_vio {
 using namespace Eigen;
 using namespace std;
@@ -42,6 +51,12 @@ public:
 			 cv::Mat &_image, int _loop_index, Eigen::Matrix<double, 8, 1 > &_loop_info,
 			 vector<cv::KeyPoint> &_keypoints, vector<cv::KeyPoint> &_keypoints_norm, vector<BRIEF::bitset> &_brief_descriptors);
 	bool findConnection(KeyFrame* old_kf);
+	bool findConnection_my(KeyFrame* old_kf);
+	Mat DrawInlier(Mat &src1, Mat &src2, vector<KeyPoint> &kpt1, vector<KeyPoint> &kpt2, vector<DMatch> &inlier, int type);
+	void pose_estimation_2d2d ( std::vector<KeyPoint> keypoints_1,
+                            std::vector<KeyPoint> keypoints_2,
+                            std::vector< DMatch > matches,
+                            Mat& R, Mat& t );
 	void computeWindowBRIEFPoint();
 	void computeBRIEFPoint();
 	//void extractBrief();

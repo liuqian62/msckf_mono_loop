@@ -144,6 +144,7 @@ add_library(pose_graph
   src/BRIEF.cpp
   src/VocabularyBinary.cpp
   src/utility.cpp
+  src/gms_matcher.cpp
 )
 add_dependencies(pose_graph
   ${${PROJECT_NAME}_EXPORTED_TARGETS}
