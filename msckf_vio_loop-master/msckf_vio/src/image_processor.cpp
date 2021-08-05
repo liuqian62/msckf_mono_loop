@@ -241,7 +241,7 @@ void ImageProcessor::cam0Callback(
     // Draw results.
     start_time = ros::Time::now();
     //drawFeaturesStereo();
-    drawFeaturesMono();
+    //drawFeaturesMono();
     //ROS_INFO("Draw features: %f",
     //    (ros::Time::now()-start_time).toSec());
   } else {
@@ -266,7 +266,7 @@ void ImageProcessor::cam0Callback(
     // Draw results.
     start_time = ros::Time::now();
     //drawFeaturesStereo();
-    drawFeaturesMono();
+    //drawFeaturesMono();
     //ROS_INFO("Draw features: %f",
     //    (ros::Time::now()-start_time).toSec());
   }

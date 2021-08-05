@@ -394,14 +394,14 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
         }
     }
     // a good match with its nerghbour
-	ROS_INFO("score%f",ret[0].Score);
+	//ROS_INFO("score%f",ret[0].Score);
     //if (ret.size() >= 1 &&ret[0].Score > 0.05)
-	if (ret.size() >= 1 &&ret[0].Score > 0.025)
+	if (ret.size() >= 1 &&ret[0].Score > 0.06)
         for (unsigned int i = 1; i < ret.size(); i++)
         {
             //if (ret[i].Score > ret[0].Score * 0.3)
             //if (ret[i].Score > 0.015)
-	if (ret[i].Score > 0.075)
+	if (ret[i].Score > 0.045)
             {          
                 find_loop = true;
                 int tmp_index = ret[i].Id;

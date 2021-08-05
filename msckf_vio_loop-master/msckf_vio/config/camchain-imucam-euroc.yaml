@@ -12,7 +12,7 @@ cam0:
   distortion_model: radtan
   intrinsics: [508.654, 509.296, 350.215, 269.375]
   resolution: [640, 480]
-  timeshift_cam_imu: 0.0
+  timeshift_cam_imu: 0.02
 
 T_imu_body:
   [1.0000, 0.0000, 0.0000, 0.0000,

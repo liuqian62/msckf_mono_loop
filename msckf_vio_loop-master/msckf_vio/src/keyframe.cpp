@@ -397,7 +397,7 @@ bool KeyFrame::findConnection_my(KeyFrame* old_kf)
 	cv::Mat d1, d2;
 	vector<DMatch> matches_all, matches_gms;
 
-	Ptr<ORB> orb = ORB::create(10000);
+	Ptr<ORB> orb = ORB::create(4000);
 	orb->setFastThreshold(0);
 	ROS_INFO("!!!!!!!!!!!");
 	orb->detectAndCompute(img1, Mat(), kp1, d1);
@@ -423,25 +423,26 @@ bool KeyFrame::findConnection_my(KeyFrame* old_kf)
 		}
 	}
 	ROS_INFO("matches_gms_size:%d",(int)matches_gms.size());
-	if(matches_gms.size()>100)
+	if(matches_gms.size()>700)
 	{
 	    cv::Mat R,t;
 	    double relative_yaw;
     	    pose_estimation_2d2d ( kp1, kp2, matches_gms, R, t );
 	    Eigen::Matrix3d relative_R;
-	    Eigen::Vector3d relative_t;
-	    //cv2eigen(R,relative_R);	  
+	    //Eigen::Vector3d relative_t;
+	    cv2eigen(R,relative_R);	  
 	    //cv2eigen(t,relative_t); 
-	    //Eigen::Quaterniond relative_q = Eigen::Quaterniond(relative_R);
-	    //relative_yaw = Utility::normalizeAngle(relative_q.x());
-	    //ROS_INFO("relative_yaw:%f", abs(relative_yaw));
+	    Eigen::Quaterniond relative_q = Eigen::Quaterniond(relative_R);
+	    relative_yaw = Utility::normalizeAngle(relative_q.x());
+	    ROS_INFO("relative_yaw:%f", abs(relative_yaw));
 
 		
-	    	//has_loop = true;
-	    	//loop_index = old_kf->index;
+	    	has_loop = true;
+	    	loop_index = old_kf->index;
 	    	//loop_info << relative_t.x(), relative_t.y(), relative_t.z(),
-	    	//             relative_q.w(), relative_q.x(), relative_q.y(), relative_q.z(),
-	    	//             relative_yaw;
+		loop_info << t.at<double>(0,0), t.at<double>(1,0), t.at<double>(2,0),
+	    	             relative_q.w(), relative_q.x(), relative_q.y(), relative_q.z(),
+	    	             relative_yaw;
 	
 	// draw matching
 	cv::Mat show = DrawInlier(img1, img2, kp1, kp2, matches_gms, 1);
