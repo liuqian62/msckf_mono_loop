@@ -962,7 +962,6 @@ void ImageProcessor::integrateImuData(
 
   if (end_iter-begin_iter > 0)
     mean_ang_vel *= 1.0f / (end_iter-begin_iter);
-
   // Transform the mean angular velocity from the IMU
   // frame to the cam0 and cam1 frames.
   Vec3f cam0_mean_ang_vel = R_cam0_imu.t() * mean_ang_vel;

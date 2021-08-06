@@ -399,22 +399,22 @@ bool KeyFrame::findConnection_my(KeyFrame* old_kf)
 
 	Ptr<ORB> orb = ORB::create(4000);
 	orb->setFastThreshold(0);
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	orb->detectAndCompute(img1, Mat(), kp1, d1);
 	orb->detectAndCompute(img2, Mat(), kp2, d2);
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	BFMatcher matcher(NORM_HAMMING);
 	matcher.match(d1, d2, matches_all);
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	// GMS filter
 	std::vector<bool> vbInliers;
 	gms_matcher gms(kp1, img1.size(), kp2, img2.size(), matches_all);
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	int num_inliers = gms.GetInlierMask(vbInliers, false, false);
 	//cout << "Get total " << num_inliers << " matches." << endl;
 
 	// collect matches
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	for (size_t i = 0; i < vbInliers.size(); ++i)
 	{
 		if (vbInliers[i] == true)
@@ -446,7 +446,7 @@ bool KeyFrame::findConnection_my(KeyFrame* old_kf)
 	
 	// draw matching
 	cv::Mat show = DrawInlier(img1, img2, kp1, kp2, matches_gms, 1);
-	ROS_INFO("!!!!!!!!!!!");
+	//ROS_INFO("!!!!!!!!!!!");
 	sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", show).toImageMsg();
 	msg->header.stamp = ros::Time(time_stamp);
 	pub_match_img.publish(msg);
@@ -486,17 +486,17 @@ void KeyFrame::pose_estimation_2d2d ( std::vector<KeyPoint> keypoints_1,
     double focal_length = 521;			//相机焦距, TUM dataset标定值
     Mat essential_matrix;
     essential_matrix = findEssentialMat ( points1, points2, focal_length, principal_point );
-    cout<<"essential_matrix is "<<endl<< essential_matrix<<endl;
+    //cout<<"essential_matrix is "<<endl<< essential_matrix<<endl;
 
     //-- 计算单应矩阵
     Mat homography_matrix;
     homography_matrix = findHomography ( points1, points2, RANSAC, 3 );
-    cout<<"homography_matrix is "<<endl<<homography_matrix<<endl;
+    //cout<<"homography_matrix is "<<endl<<homography_matrix<<endl;
 
     //-- 从本质矩阵中恢复旋转和平移信息.
     recoverPose ( essential_matrix, points1, points2, R, t, focal_length, principal_point );
-    cout<<"R is "<<endl<<R<<endl;
-    cout<<"t is "<<endl<<t<<endl;
+    //cout<<"R is "<<endl<<R<<endl;
+    //cout<<"t is "<<endl<<t<<endl;
     
 }
 
