@@ -216,7 +216,7 @@ void MsckfVio::imuCallback(
   imu_msg_buffer.push_back(*msg);
 
   if (!is_gravity_set) {
-    if (imu_msg_buffer.size() < 100) return;
+    if (imu_msg_buffer.size() < 200) return;
     //if (imu_msg_buffer.size() < 10) return;
     initializeGravityAndBias();
     is_gravity_set = true;
