@@ -154,7 +154,7 @@ bool MsckfVio::createRosIO() {
   reset_srv = nh.advertiseService("reset",
       &MsckfVio::resetCallback, this);
 
-  imu_sub = nh.subscribe("/imu0", 100,
+  imu_sub = nh.subscribe("/camera/imu", 50,
       &MsckfVio::imuCallback, this);
   feature_sub = nh.subscribe("features", 40,
       &MsckfVio::featureCallback, this);
@@ -249,8 +249,7 @@ void MsckfVio::initializeGravityAndBias() {
   // This is the gravity in the IMU frame.
   Vector3d gravity_imu =
     sum_linear_acc / imu_msg_buffer.size();
-  
-  state_server.imu_state.acc_bias = gravity_imu;
+
   // Initialize the initial orientation, so that the estimation
   // is consistent with the inertial frame.
   double gravity_norm = gravity_imu.norm();
@@ -258,7 +257,7 @@ void MsckfVio::initializeGravityAndBias() {
 
   Quaterniond q0_i_w = Quaterniond::FromTwoVectors(
     gravity_imu, -IMUState::gravity);
-  //state_server.imu_state.orientation =
+  state_server.imu_state.orientation =
     rotationToQuaternion(q0_i_w.toRotationMatrix().transpose());
 
   return;
@@ -551,16 +550,6 @@ void MsckfVio::processModel(const double& time,
   IMUState& imu_state = state_server.imu_state;
   Vector3d gyro = m_gyro - imu_state.gyro_bias;
   Vector3d acc = m_acc - imu_state.acc_bias;
-  //Vector3d acc = m_acc ;
-  //gyro[0] = 0;
-  //gyro[1] = 0;
-  //gyro[0] = gyro[0]-0.01;
-  //gyro[1] = gyro[1]-0.0019;
-  //gyro[2] = gyro[2]-0.043;
-  //acc[2] = acc[2];
-ROS_INFO("ACC1:%f",gyro[0]);
-ROS_INFO("ACC2:%f",gyro[1]);
-ROS_INFO("ACC3:%f",gyro[2]);
   double dtime = time - imu_state.time;
 
   // Compute discrete transition and noise covariance matrix
@@ -679,28 +668,24 @@ void MsckfVio::predictNewState(const double& dt,
   // k1 = f(tn, yn)
   Vector3d k1_v_dot = quaternionToRotation(q).transpose()*acc +
     IMUState::gravity;
-    //k1_v_dot[2] = 0;
   Vector3d k1_p_dot = v;
 
   // k2 = f(tn+dt/2, yn+k1*dt/2)
   Vector3d k1_v = v + k1_v_dot*dt/2;
   Vector3d k2_v_dot = dR_dt2_transpose*acc +
     IMUState::gravity;
-    //k2_v_dot[2] = 0;
   Vector3d k2_p_dot = k1_v;
 
   // k3 = f(tn+dt/2, yn+k2*dt/2)
   Vector3d k2_v = v + k2_v_dot*dt/2;
   Vector3d k3_v_dot = dR_dt2_transpose*acc +
     IMUState::gravity;
-    //k3_v_dot[2] = 0;
   Vector3d k3_p_dot = k2_v;
 
   // k4 = f(tn+dt, yn+k3*dt)
   Vector3d k3_v = v + k3_v_dot*dt;
   Vector3d k4_v_dot = dR_dt_transpose*acc +
     IMUState::gravity;
-    //k4_v_dot[2] = 0;
   Vector3d k4_p_dot = k3_v;
 
   // yn+1 = yn + dt/6*(k1+2*k2+2*k3+k4)

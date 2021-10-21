@@ -190,12 +190,12 @@ bool ImageProcessor::createRosIO() {
   image_transport::ImageTransport it(nh);
   debug_stereo_pub = it.advertise("debug_stereo_image", 1);
 
-  cam0_img_sub.subscribe(nh, "/cam0/image_raw", 10);
+  cam0_img_sub.subscribe(nh, "/camera/color/image_raw", 10);
   // cam1_img_sub.subscribe(nh, "cam1_image", 10);
   // stereo_sub.connectInput(cam0_img_sub, cam1_img_sub);
   // stereo_sub.registerCallback(&ImageProcessor::stereoCallback, this);
   cam0_img_sub.registerCallback(&ImageProcessor::cam0Callback, this);
-  imu_sub = nh.subscribe("/imu0", 50,
+  imu_sub = nh.subscribe("/camera/imu", 50,
       &ImageProcessor::imuCallback, this);
 
   return true;
@@ -240,8 +240,7 @@ void ImageProcessor::cam0Callback(
 
     // Draw results.
     start_time = ros::Time::now();
-    //drawFeaturesStereo();
-    //drawFeaturesMono();
+    drawFeaturesMono();
     //ROS_INFO("Draw features: %f",
     //    (ros::Time::now()-start_time).toSec());
   } else {
@@ -265,8 +264,7 @@ void ImageProcessor::cam0Callback(
 
     // Draw results.
     start_time = ros::Time::now();
-    //drawFeaturesStereo();
-    //drawFeaturesMono();
+    drawFeaturesMono();
     //ROS_INFO("Draw features: %f",
     //    (ros::Time::now()-start_time).toSec());
   }
@@ -595,6 +593,7 @@ void ImageProcessor::trackFeatures() {
     // grid_new_feature.cam1_point = curr_matched_cam1_points[i];
 
     ++after_ransac;
+
   }
   #endif
 
@@ -962,6 +961,7 @@ void ImageProcessor::integrateImuData(
 
   if (end_iter-begin_iter > 0)
     mean_ang_vel *= 1.0f / (end_iter-begin_iter);
+
   // Transform the mean angular velocity from the IMU
   // frame to the cam0 and cam1 frames.
   Vec3f cam0_mean_ang_vel = R_cam0_imu.t() * mean_ang_vel;
@@ -1469,8 +1469,8 @@ void ImageProcessor::drawFeaturesStereo() {
     cv_bridge::CvImage debug_image(cam0_curr_img_ptr->header, "bgr8", out_img);
     debug_stereo_pub.publish(debug_image.toImageMsg());
   }
-  //imshow("Feature", out_img);
-  //waitKey(5);
+  // imshow("Feature", out_img);
+  // waitKey(5);
 
   return;
 }

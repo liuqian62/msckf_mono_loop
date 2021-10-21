@@ -1046,7 +1046,7 @@ bool PoseGraph::loadParameters() {
 bool PoseGraph::createRosIO() {
  //    ros::Subscriber sub_imu_forward = n.subscribe("/vins_estimator/imu_propagate", 2000, imu_forward_callback);
     sub_vio = nh.subscribe("/firefly_sbx/vio/odom", 2000, &PoseGraph::vio_callback,this);
-    sub_image = nh.subscribe("/cam0/image_raw", 2000, &PoseGraph::image_callback,this);
+    sub_image = nh.subscribe("/camera/color/image_raw", 2000, &PoseGraph::image_callback,this);
     sub_pose = nh.subscribe("/firefly_sbx/vio/keyframe_pose", 2000, &PoseGraph::pose_callback,this);
     sub_extrinsic = nh.subscribe("/firefly_sbx/vio/extrinsic", 2000, &PoseGraph::extrinsic_callback,this);
     sub_point = nh.subscribe("/firefly_sbx/vio/keyframe_point", 2000, &PoseGraph::point_callback,this);
