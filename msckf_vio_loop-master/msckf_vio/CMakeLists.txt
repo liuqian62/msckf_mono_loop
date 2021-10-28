@@ -107,6 +107,7 @@ target_link_libraries(msckf_vio_nodelet
 add_library(image_processor
   src/image_processor.cpp
   src/utils.cpp
+  src/gms_matcher.cpp
 )
 add_dependencies(image_processor
   ${${PROJECT_NAME}_EXPORTED_TARGETS}

@@ -429,6 +429,88 @@ void ImageProcessor::predictFeatureTracking(
   return;
 }
 
+void ImageProcessor::FeatureTracking_my(
+      const std::vector<cv::Point2f>& input_pts,
+       std::vector<unsigned char>&track_inliers,
+      std::vector<cv::Point2f>& compenstated_pts){
+          // Return directly if there are no input features.
+  if (input_pts.size() == 0) {
+    compenstated_pts.clear();
+    return;
+  }
+
+        cv::Mat img1;
+      	cv::Mat img2;
+  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
+  clahe->apply(cam0_prev_img_ptr->image, img1);
+  clahe->apply(cam0_curr_img_ptr->image, img2);
+   
+        //cv::imshow("1", img1);
+	//cv::imshow("2", img2);
+        //cv::waitKey();
+
+	vector<KeyPoint> kp1, kp2;
+	cv::Mat d1, d2;
+	vector<DMatch> matches_all, matches_gms;
+
+	cv::Ptr<ORB> orb = ORB::create(4000);
+	orb->setFastThreshold(0);
+//	ROS_INFO("!!!!!!!!!!!");
+	orb->detectAndCompute(img1, Mat(), kp1, d1);
+	orb->detectAndCompute(img2, Mat(), kp2, d2);
+//	ROS_INFO("!!!!!!!!!!!");
+	BFMatcher matcher(NORM_HAMMING);
+	matcher.match(d1, d2, matches_all);
+	//ROS_INFO("!!!!!!!!!!!");
+	// GMS filter
+	std::vector<bool> vbInliers;
+	gms_matcher gms(kp1, img1.size(), kp2, img2.size(), matches_all);
+	//ROS_INFO("!!!!!!!!!!!111111");
+	int num_inliers = gms.GetInlierMask(vbInliers, false, false);
+	//cout << "Get total " << num_inliers << " matches." << endl;
+
+	// collect matches
+	ROS_INFO("!!!!!!!!!!!22222");
+	for (size_t i = 0; i < vbInliers.size(); ++i)
+	{
+		if (vbInliers[i] == true)
+		{
+			matches_gms.push_back(matches_all[i]);
+		}
+	}
+	ROS_INFO("matches_gms_size:%d",(int)matches_gms.size());
+
+
+track_inliers.resize(input_pts.size());
+  compenstated_pts.resize(input_pts.size());
+   for (int i = 0; i < input_pts.size(); ++i) {
+     track_inliers[i] = 0;
+         int min_distance = 63;
+     		for (int  j = 0; j < matches_gms.size(); j++)		{
+			Point2f left = kp1[matches_gms[j].queryIdx].pt;
+  
+      if ((pow(input_pts[i].x - left.x, 2) + pow(input_pts[i].y - left.y, 2))<min_distance){
+        min_distance = (pow(input_pts[i].x - left.x, 2) + pow(input_pts[i].y - left.y, 2));
+        compenstated_pts[i] = kp2[matches_gms[j].trainIdx].pt;
+        track_inliers[i] = 1;
+      }
+
+
+		//	Point2f right = (kp2[inlier[i].trainIdx].pt + Point2f((float)src1.cols, 0.f));
+	//ROS_INFO("!!!!!!!!!!!");
+
+
+
+
+		//	cv::line(output, left, right, Scalar(0, 255, 255));
+		}
+   }
+   return ;
+      }
+
+  // Intrinsic matrix.
+
+
 void ImageProcessor::trackFeatures() {
   // Size of each grid.
   static int grid_height =
@@ -466,21 +548,29 @@ void ImageProcessor::trackFeatures() {
 
   // Track features using LK optical flow method.
   vector<Point2f> curr_cam0_points(0);
+  curr_cam0_points = prev_cam0_points;
   vector<unsigned char> track_inliers(0);
 
-  predictFeatureTracking(prev_cam0_points,
-      cam0_R_p_c, cam0_intrinsics, curr_cam0_points);
+  FeatureTracking_my(prev_cam0_points,
+    track_inliers,    curr_cam0_points);
 
-  calcOpticalFlowPyrLK(
-      prev_cam0_pyramid_, curr_cam0_pyramid_,
-      prev_cam0_points, curr_cam0_points,
-      track_inliers, noArray(),
-      Size(processor_config.patch_size, processor_config.patch_size),
-      processor_config.pyramid_levels,
-      TermCriteria(TermCriteria::COUNT+TermCriteria::EPS,
-        processor_config.max_iteration,
-        processor_config.track_precision),
-      cv::OPTFLOW_USE_INITIAL_FLOW);
+
+  // predictFeatureTracking(prev_cam0_points,
+  //     cam0_R_p_c, cam0_intrinsics, curr_cam0_points);
+
+  // calcOpticalFlowPyrLK(
+  //     prev_cam0_pyramid_, curr_cam0_pyramid_,
+  //     prev_cam0_points, curr_cam0_points,
+  //     track_inliers, noArray(),
+  //     Size(processor_config.patch_size, processor_config.patch_size),
+  //     processor_config.pyramid_levels,
+  //     TermCriteria(TermCriteria::COUNT+TermCriteria::EPS,
+  //       processor_config.max_iteration,
+  //       processor_config.track_precision),
+  //     cv::OPTFLOW_USE_INITIAL_FLOW);
+
+
+
 
   // Mark those tracked points out of the image region
   // as untracked.

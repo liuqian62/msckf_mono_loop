@@ -21,7 +21,7 @@
 #include <sensor_msgs/Image.h>
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
-
+#include "gms_matcher.h"
 namespace msckf_vio {
 
 /*
@@ -237,6 +237,11 @@ private:
       const std::vector<cv::Point2f>& input_pts,
       const cv::Matx33f& R_p_c,
       const cv::Vec4d& intrinsics,
+      std::vector<cv::Point2f>& compenstated_pts);
+
+        void FeatureTracking_my(
+      const std::vector<cv::Point2f>& input_pts,
+       std::vector<unsigned char>&track_inliers,
       std::vector<cv::Point2f>& compenstated_pts);
 
   /*
