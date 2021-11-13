@@ -3,7 +3,7 @@
   <arg name="robot" default="firefly_sbx"/>
   <arg name="fixed_frame_id" default="world"/>
   <arg name="calibration_file"
-    default="$(find msckf_vio)/config/camchain-imucam-d435i.yaml"/>
+    default="$(find msckf_vio)/config/camchain-imucam-calib_4.yaml"/>
 
   <!-- Image Processor Nodelet  -->
   <include file="$(find msckf_vio)/launch/image_processor_d435i.launch">
@@ -27,10 +27,10 @@
       <rosparam command="load" file="$(arg calibration_file)"/>
 
       <param name="publish_tf" value="true"/>
-      <param name="frame_rate" value="50"/>
+      <param name="frame_rate" value="30"/>
       <param name="fixed_frame_id" value="$(arg fixed_frame_id)"/>
       <param name="child_frame_id" value="odom"/>
-      <param name="max_cam_state_size" value="20"/>
+      <param name="max_cam_state_size" value="15"/>
       <param name="position_std_threshold" value="8.0"/>
 
       <param name="rotation_threshold" value="0.2618"/>
@@ -41,10 +41,10 @@
       <param name="feature/config/translation_threshold" value="-1.0"/>
 
       <!-- These values should be standard deviation -->
-      <param name="noise/gyro" value="0.0200220616136"/>
+      <param name="noise/gyro" value="0.020016136"/>
       <param name="noise/acc" value="0.258977230559"/>
-      <param name="noise/gyro_bias" value="1.49028361597e-05"/>
-      <param name="noise/acc_bias" value="0.000601598778846 "/>
+      <param name="noise/gyro_bias" value="1.49e-5"/>
+      <param name="noise/acc_bias" value="0.000061 "/>
       <param name="noise/feature" value="0.035"/>
 
       <param name="initial_state/velocity/x" value="0.0"/>

@@ -453,7 +453,7 @@ void ImageProcessor::FeatureTracking_my(
 	cv::Mat d1, d2;
 	vector<DMatch> matches_all, matches_gms;
 
-	cv::Ptr<ORB> orb = ORB::create(4000);
+	cv::Ptr<ORB> orb = ORB::create(1800);
 	orb->setFastThreshold(0);
 //	ROS_INFO("!!!!!!!!!!!");
 	orb->detectAndCompute(img1, Mat(), kp1, d1);
@@ -485,7 +485,7 @@ track_inliers.resize(input_pts.size());
   compenstated_pts.resize(input_pts.size());
    for (int i = 0; i < input_pts.size(); ++i) {
      track_inliers[i] = 0;
-         int min_distance = 63;
+         int min_distance =200;
      		for (int  j = 0; j < matches_gms.size(); j++)		{
 			Point2f left = kp1[matches_gms[j].queryIdx].pt;
   
@@ -553,6 +553,7 @@ void ImageProcessor::trackFeatures() {
 
   FeatureTracking_my(prev_cam0_points,
     track_inliers,    curr_cam0_points);
+
 
 
   // predictFeatureTracking(prev_cam0_points,
@@ -696,12 +697,12 @@ void ImageProcessor::trackFeatures() {
   for (const auto& item : *curr_features_ptr)
     curr_feature_num += item.second.size();
 
-//   ROS_INFO_THROTTLE(0.5,
-//       "\033[0;32m candidates: %d; track: %d; match: %d; ransac: %d/%d=%f\033[0m",
-//       before_tracking, after_tracking, after_matching,
-//       curr_feature_num, prev_feature_num,
-//       static_cast<double>(curr_feature_num)/
-//       (static_cast<double>(prev_feature_num)+1e-5));
+  ROS_INFO_THROTTLE(0.5,
+      "\033[0;32m candidates: %d; track: %d; match: %d; ransac: %d/%d=%f\033[0m",
+      before_tracking, after_tracking, after_matching,
+      curr_feature_num, prev_feature_num,
+      static_cast<double>(curr_feature_num)/
+      (static_cast<double>(prev_feature_num)+1e-5));
   //printf(
   //    "\033[0;32m candidates: %d; raw track: %d; stereo match: %d; ransac: %d/%d=%f\033[0m\n",
   //    before_tracking, after_tracking, after_matching,

@@ -2,7 +2,7 @@
 
   <arg name="robot" default="firefly_sbx"/>
   <arg name="calibration_file"
-    default="$(find msckf_vio)/config/camchain-imucam-d435i.yaml"/>
+    default="$(find msckf_vio)/config/camchain-imucam-calib_4.yaml"/>
 
   <!-- Pose Graph Nodelet  -->
   <group ns="$(arg robot)">

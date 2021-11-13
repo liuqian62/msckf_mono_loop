@@ -418,6 +418,14 @@ bool Feature::initializePosition(
   // representation to its 3d coordinate.
   Eigen::Vector3d final_position(solution(0)/solution(2),
       solution(1)/solution(2), 1.0/solution(2));
+      
+
+      // if (final_position(2)>10){
+      //   final_position(0) = 10*final_position(0)/final_position(2);
+      //   final_position(1) = 10*final_position(1)/final_position(2);
+      //   final_position(2) = 10;
+
+      // }
 
   // Check if the solution is valid. Make sure the feature
   // is in front of every camera frame observing it.

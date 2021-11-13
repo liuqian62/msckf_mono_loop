@@ -154,7 +154,7 @@ bool MsckfVio::createRosIO() {
   reset_srv = nh.advertiseService("reset",
       &MsckfVio::resetCallback, this);
 
-  imu_sub = nh.subscribe("/camera/imu", 50,
+  imu_sub = nh.subscribe("/camera/imu", 100,
       &MsckfVio::imuCallback, this);
   feature_sub = nh.subscribe("features", 40,
       &MsckfVio::featureCallback, this);
@@ -165,7 +165,7 @@ bool MsckfVio::createRosIO() {
   pub_keyframe_pose = nh.advertise<nav_msgs::Odometry>("keyframe_pose", 1000);
   pub_keyframe_point = nh.advertise<sensor_msgs::PointCloud>("keyframe_point", 1000);
   pub_extrinsic = nh.advertise<nav_msgs::Odometry>("extrinsic", 1000);
-  sub_relo_points = nh.subscribe("/firefly_sbx/pose_graph/match_points", 2000, &MsckfVio::relocalization_callback, this);
+  //sub_relo_points = nh.subscribe("/firefly_sbx/pose_graph/match_points", 2000, &MsckfVio::relocalization_callback, this);
   return true;
 }
 void MsckfVio::relocalization_callback(const sensor_msgs::PointCloudConstPtr &points_msg)
@@ -1492,6 +1492,7 @@ void MsckfVio::publish(const ros::Time& time) {
 
   if(marginalization_flag == MARGIN_OLD)
   {
+// ROS_INFO("SIZE_OF_POINT_3D:%d", point_cloud.channels.size());
     pub_keyframe_point.publish(point_cloud);
   }
   nav_msgs::Odometry odometry;
