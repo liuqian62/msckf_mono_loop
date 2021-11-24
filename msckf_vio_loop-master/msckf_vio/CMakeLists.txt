@@ -29,7 +29,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED)
 find_package(Eigen3 REQUIRED)
-find_package(OpenCV REQUIRED)
+find_package(OpenCV  REQUIRED)
 find_package(SuiteSparse REQUIRED)
 find_package(Ceres REQUIRED)
 ##################
