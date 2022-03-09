@@ -23,9 +23,9 @@
       <param name="ransac_threshold" value="3"/>
       <param name="stereo_threshold" value="5"/>
 
-      <!--remap from="~imu" to="sync/imu/imu"/-->
-      <!--remap from="~cam0_image" to="sync/cam0/image_raw"/-->
-      <!--remap from="~cam1_image" to="sync/cam1/image_raw"/-->
+      <remap from="~imu" to="sync/imu/imu"/>
+      <remap from="~cam0_image" to="sync/cam0/image_raw"/>
+      <remap from="~cam1_image" to="sync/cam1/image_raw"/>
 
     </node>
   </group>

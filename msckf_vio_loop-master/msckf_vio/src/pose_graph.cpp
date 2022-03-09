@@ -133,9 +133,7 @@ void PoseGraph::addKeyFrame(KeyFrame* cur_kf, bool flag_detect_loop)
         //printf(" %d detect loop with %d \n", cur_kf->index, loop_index);
         KeyFrame* old_kf = getKeyFrame(loop_index);
 
-        if (cur_kf->findConnection_my(old_kf))
-	{}
-	if (0)
+        if (cur_kf->findConnection(old_kf))
         {
             if (earliest_loop_index > loop_index || earliest_loop_index == -1)
                 earliest_loop_index = loop_index;
@@ -394,14 +392,11 @@ int PoseGraph::detectLoop(KeyFrame* keyframe, int frame_index)
         }
     }
     // a good match with its nerghbour
-	//ROS_INFO("score%f",ret[0].Score);
-    //if (ret.size() >= 1 &&ret[0].Score > 0.05)
-	if (ret.size() >= 1 &&ret[0].Score > 0.06)
+    if (ret.size() >= 1 &&ret[0].Score > 0.05)
         for (unsigned int i = 1; i < ret.size(); i++)
         {
             //if (ret[i].Score > ret[0].Score * 0.3)
-            //if (ret[i].Score > 0.015)
-	if (ret[i].Score > 0.045)
+            if (ret[i].Score > 0.015)
             {          
                 find_loop = true;
                 int tmp_index = ret[i].Id;
@@ -994,7 +989,11 @@ bool PoseGraph::loadParameters() {
         std::ofstream fout(VINS_RESULT_PATH, std::ios::out);
         fout.close();
 	nh.param<string>("IMAGE_TOPIC",
-	  IMAGE_TOPIC, string("/cam0/image_raw"));
+	  IMAGE_TOPIC, string("/camera/color/image_raw"));
+
+    // nh.param<string>("IMAGE_TOPIC",
+	//   IMAGE_TOPIC, string("/cam0/image_raw"));
+
 	nh.param<string>("POSE_GRAPH_SAVE_PATH",
 	  POSE_GRAPH_SAVE_PATH, string("/home/tony-ws1/output/pose_graph/"));
 	nh.param<string>("VINS_RESULT_PATH",
@@ -1046,7 +1045,7 @@ bool PoseGraph::loadParameters() {
 bool PoseGraph::createRosIO() {
  //    ros::Subscriber sub_imu_forward = n.subscribe("/vins_estimator/imu_propagate", 2000, imu_forward_callback);
     sub_vio = nh.subscribe("/firefly_sbx/vio/odom", 2000, &PoseGraph::vio_callback,this);
-    sub_image = nh.subscribe("/cam0/image_raw", 2000, &PoseGraph::image_callback,this);
+    sub_image = nh.subscribe(IMAGE_TOPIC, 2000, &PoseGraph::image_callback,this);
     sub_pose = nh.subscribe("/firefly_sbx/vio/keyframe_pose", 2000, &PoseGraph::pose_callback,this);
     sub_extrinsic = nh.subscribe("/firefly_sbx/vio/extrinsic", 2000, &PoseGraph::extrinsic_callback,this);
     sub_point = nh.subscribe("/firefly_sbx/vio/keyframe_point", 2000, &PoseGraph::point_callback,this);
@@ -1236,7 +1235,7 @@ void PoseGraph::vio_callback(const nav_msgs::Odometry::ConstPtr &pose_msg)
 
 void PoseGraph::extrinsic_callback(const nav_msgs::Odometry::ConstPtr &pose_msg)
 {
-//  cout<<"RTK_ext"<<endl;
+    // cout<<"RTK_ext"<<endl;
     m_process.lock();
     tic = Vector3d(pose_msg->pose.pose.position.x,
                    pose_msg->pose.pose.position.y,

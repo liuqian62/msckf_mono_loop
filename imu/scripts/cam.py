@@ -11,11 +11,11 @@ IMAGE_WIDTH=640
 IMAGE_HEIGHT=480
 
 def PublishImg(cap):
-    stamp = rospy.get_rostime()
+    #stamp = rospy.get_rostime()
     ret, frame = cap.read()
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     img_msg = bridge.cv2_to_imgmsg(frame, encoding="mono8")
-    #stamp = rospy.get_rostime()
+    stamp = rospy.get_rostime()
     img_msg.header.stamp = stamp
     imagePub.publish(img_msg)
     cv2.imshow('123',frame)
